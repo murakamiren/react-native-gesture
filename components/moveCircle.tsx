@@ -6,6 +6,7 @@ import Animated, {
 	useAnimatedStyle,
 	useSharedValue,
 	withSpring,
+	withTiming,
 } from "react-native-reanimated";
 
 type contextType = {
@@ -14,18 +15,22 @@ type contextType = {
 };
 
 const MoveCircle: VFC = () => {
-	const circleSize = 100;
+	const circleSize = 80;
 	const circleSizeHalf = circleSize / 2;
 
-	const bigCircle = circleSize * 3.5;
+	const bigCircle = circleSize * 4;
 
 	const translateX = useSharedValue(0);
 	const translateY = useSharedValue(0);
+	const radius = useSharedValue(circleSizeHalf / 2);
+	const scale = useSharedValue(0.8);
 
 	const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, contextType>({
 		onStart: (e, context) => {
 			context.translateX = translateX.value;
 			context.translateY = translateY.value;
+			radius.value = withTiming(circleSizeHalf);
+			scale.value = withSpring(1.5);
 		},
 		onActive: (e, context) => {
 			// console.log(e.translationX);
@@ -33,9 +38,12 @@ const MoveCircle: VFC = () => {
 			translateY.value = e.translationY + context.translateY;
 		},
 		onEnd: (e) => {
+			radius.value = withTiming(circleSizeHalf / 2);
+			scale.value = withSpring(0.8);
+
 			//三平方
 			const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
-			const range = bigCircle / 2 + circleSizeHalf;
+			const range = bigCircle / 2 - circleSizeHalf;
 
 			console.log(distance, range);
 
@@ -55,7 +63,11 @@ const MoveCircle: VFC = () => {
 				{
 					translateY: translateY.value,
 				},
+				{
+					scale: scale.value,
+				},
 			],
+			borderRadius: radius.value,
 		};
 	});
 
