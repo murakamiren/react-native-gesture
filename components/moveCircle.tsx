@@ -23,7 +23,7 @@ const MoveCircle: VFC = () => {
 	const translateX = useSharedValue(0);
 	const translateY = useSharedValue(0);
 	const radius = useSharedValue(circleSizeHalf / 2);
-	const scale = useSharedValue(0.8);
+	const scale = useSharedValue(0.7);
 
 	const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, contextType>({
 		onStart: (e, context) => {
