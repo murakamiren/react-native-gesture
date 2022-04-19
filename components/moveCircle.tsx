@@ -24,6 +24,7 @@ const MoveCircle: VFC = () => {
 	const translateY = useSharedValue(0);
 	const radius = useSharedValue(circleSizeHalf / 2);
 	const scale = useSharedValue(0.7);
+	const rotate = useSharedValue(0);
 
 	const panGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, contextType>({
 		onStart: (e, context) => {
@@ -31,6 +32,7 @@ const MoveCircle: VFC = () => {
 			context.translateY = translateY.value;
 			radius.value = withTiming(circleSizeHalf);
 			scale.value = withSpring(1.5);
+			rotate.value = withTiming(90);
 		},
 		onActive: (e, context) => {
 			// console.log(e.translationX);
@@ -40,6 +42,7 @@ const MoveCircle: VFC = () => {
 		onEnd: (e) => {
 			radius.value = withTiming(circleSizeHalf / 2);
 			scale.value = withSpring(0.8);
+			rotate.value = withTiming(0);
 
 			//三平方
 			const distance = Math.sqrt(translateX.value ** 2 + translateY.value ** 2);
@@ -65,6 +68,9 @@ const MoveCircle: VFC = () => {
 				},
 				{
 					scale: scale.value,
+				},
+				{
+					rotate: `${rotate.value}deg`,
 				},
 			],
 			borderRadius: radius.value,
